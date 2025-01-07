@@ -30,13 +30,11 @@ export const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-
     res.json({
       _id: user._id,
       username: user.username,
-      email:user.email
+      email: user.email,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
