@@ -1,11 +1,9 @@
-import User from "../model/Users.js";
-import bcrypt from "bcrypt";
+import user from "../model/Users.js";
 
-export const createUser = async (req, res) => {
-  const data = new User({
-    username: req.body.username,
+export const postUser = async (req, res) => {
+  const data = new user({
+    name: req.body.name,
     email: req.body.email,
-    password: req.body.password,
   });
   try {
     const dataToSave = await data.save();
@@ -16,34 +14,9 @@ export const createUser = async (req, res) => {
   }
 };
 
-export const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: "Please add all fields" });
-    }
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-    res.json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
-  }
-};
-
 export const getUsers = async (req, res) => {
   try {
-    const data = await User.find();
+    const data = await user.find();
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -52,7 +25,7 @@ export const getUsers = async (req, res) => {
 
 export const getUserByID = async (req, res) => {
   try {
-    const data = await User.findById(req.params.id);
+    const data = await user.findById(req.params.id);
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: error.message });
